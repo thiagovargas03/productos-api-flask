@@ -1,7 +1,10 @@
 from flasgger import Swagger
 from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
 from os import environ 
+
+load_dotenv()
 
 app = Flask(__name__)   
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DB_URL')
@@ -12,43 +15,55 @@ class Producto(db.Model):
     __tablename__ = 'Producto'
 
     id = db.Column(db.Integer, primary_key=True)
-    nombre= db.Column(db.String(30),nullable=False)
-    descripcion= db.Column(db.String(100), nullable=False)
-    precio= db.Column(db.Numeric(10,2), nullable=False)
-    cantidad = db.Column(db.Integer,nullable=False)
+    nombre = db.Column(db.String(30), nullable=False)
+    descripcion = db.Column(db.String(100), nullable=False)
+    precio = db.Column(db.Numeric(10, 2), nullable=False)
+    cantidad = db.Column(db.Integer, nullable=False)
 
     def json(self):
-        return {'id':id,'nombre':self.nombre,'descripcion':self.descripcion,'precio':self.precio,'cantidad':self.cantidad}
-db.create_all()
+        return {
+            'id': self.id,
+            'nombre': self.nombre,
+            'descripcion': self.descripcion,
+            'precio': float(self.precio),
+            'cantidad': self.cantidad
+        }
 
-@app.route('/producto', methods = ['POST'])
+with app.app_context():
+    db.create_all()
+
+@app.route('/producto', methods=['POST'])
 def create_product():
     """
     Crear un nuevo producto
     ---
     tags:
       - Productos
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - nombre
-              - descripcion
-              - precio
-              - cantidad
-            properties:
-              nombre:
-                type: string
-              descripcion:
-                type: string
-              precio:
-                type: number
-                format: float
-              cantidad:
-                type: integer
+    parameters:
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          required:
+            - nombre
+            - descripcion
+            - precio
+            - cantidad
+          properties:
+            nombre:
+              type: string
+              example: "Remera"
+            descripcion:
+              type: string
+              example: "Remera de algodon"
+            precio:
+              type: number
+              format: float
+              example: 1999.99
+            cantidad:
+              type: integer
+              example: 10
     responses:
       201:
         description: Producto creado exitosamente
@@ -57,19 +72,22 @@ def create_product():
     """
     try:
         data = request.get_json()
-        new_product = Producto(nombre=data['nombre'],
-                               descripcion=data['descripcion'],
-                               precio=data['precio'],
-                               cantidad=data['cantidad'])
+        print(data)
+        new_product = Producto(
+            nombre=data['nombre'],
+            descripcion=data['descripcion'],
+            precio=data['precio'],
+            cantidad=data['cantidad']
+        )
         db.session.add(new_product)
         db.session.commit()
-        return make_response(jsonify({'message':'Producto Creado'}),201)
-    except:
-        return make_response(jsonify({'message':'Error creando producto'}),500)
-    
+        return make_response(jsonify({'message': 'Producto creado'}), 201)
+    except Exception as e:
+        print(e)  # para debug
+        return make_response(jsonify({'message': 'Error creando producto'}), 500)
 
-    
-@app.route('/producto', methods = ['GET'])
+
+@app.route('/producto', methods=['GET'])
 def get_products():
     """
     Obtener todos los productos
@@ -105,24 +123,14 @@ def get_products():
     """
     try:
         productos = Producto.query.all()
-        return make_response(jsonify({'Productos': [producto.json() for producto in productos]}), 200)
+        return make_response(jsonify({'productos': [p.json() for p in productos]}), 200)
     except:
-        return make_response(jsonify({'message':'Error buscando productos'}),500)
-    
-@app.route('/producto/<int:id>',methods=['GET'])
-def get_product(id):
-    try:
-        product = Producto.query.filter_by(id=id).first()
-        return make_response(jsonify({'Producto': product.json()}),200)
-    except:
-        return make_response(jsonify({{'message':'Error buscando el producto'}}))
-    
+        return make_response(jsonify({'message': 'Error buscando productos'}), 500)
 
-    
-@app.route('/producto/<int:id>', methods = ['PUT'])
-def update_product(id):
+@app.route('/producto/<int:id>', methods=['GET'])
+def get_product(id):
     """
-    Actualizar un producto por ID
+    Obtener un producto por ID
     ---
     tags:
       - Productos
@@ -131,51 +139,82 @@ def update_product(id):
         in: path
         type: integer
         required: true
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - nombre
-              - descripcion
-              - precio
-              - cantidad
-            properties:
-              nombre:
-                type: string
-              descripcion:
-                type: string
-              precio:
-                type: number
-                format: float
-              cantidad:
-                type: integer
     responses:
       200:
-        description: Producto actualizado
+        description: Producto encontrado
       404:
         description: Producto no encontrado
       500:
         description: Error en el servidor
     """
     try:
-        product = Producto.query.filter_by(id = id).first()
+        product = Producto.query.filter_by(id=id).first()
         if product:
-            data = request.get_json()
-            product.nombre=data['nombre']
-            product.descripcion=data['descripcion']
-            product.precio=data['precio']
-            product.cantidad=data['cantidad']
-            db.session.commit()
-            return make_response(jsonify({'message':'Producto Actualizado'}),201)
-        return make_response(jsonify({'message':'Producto no encontrado'}),404)
+            return make_response(jsonify({'producto': product.json()}), 200)
+        return make_response(jsonify({'message': 'Producto no encontrado'}), 404)
     except:
-        return make_response(jsonify({'message':'Error actualizando producto'}),500)
-    
-    
-    
+        return make_response(jsonify({'message': 'Error buscando el producto'}), 500)
+
+@app.route('/producto/<int:id>', methods=['PUT'])
+def update_product(id):
+    """
+    Actualizar un producto existente
+    ---
+    tags:
+      - Productos
+    parameters:
+      - name: id
+        in: path
+        type: integer
+        required: true
+      - name: body
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            nombre:
+              type: string
+              example: "Nombre actualizado"
+            descripcion:
+              type: string
+              example: "Descripcion actualizada"
+            precio:
+              type: number
+              format: float
+              example: 2499.99
+            cantidad:
+              type: integer
+              example: 5
+    responses:
+      200:
+        description: Producto actualizado exitosamente
+      404:
+        description: Producto no encontrado
+      500:
+        description: Error en el servidor
+    """
+    try:
+        product = Producto.query.get(id)
+        if not product:
+            return make_response(jsonify({'message': 'Producto no encontrado'}), 404)
+
+        data = request.get_json()
+        if 'nombre' in data:
+            product.nombre = data['nombre']
+        if 'descripcion' in data:
+            product.descripcion = data['descripcion']
+        if 'precio' in data:
+            product.precio = data['precio']
+        if 'cantidad' in data:
+            product.cantidad = data['cantidad']
+
+        db.session.commit()
+        return make_response(jsonify({'message': 'Producto actualizado'}), 200)
+    except:
+        return make_response(jsonify({'message': 'Error actualizando producto'}), 500)
+
+
 @app.route('/producto/<int:id>', methods=['DELETE'])
 def delete_product(id):
     """
@@ -197,11 +236,14 @@ def delete_product(id):
         description: Error en el servidor
     """
     try:
-        product = Producto.query.filter_by(id = id).first()
+        product = Producto.query.filter_by(id=id).first()
         if product:
             db.session.delete(product)
             db.session.commit()
-            return make_response(jsonify({'message':'Producto eliminado'}),200)
-        return make_response(jsonify({'message':'Producto no encontrado'}),404)
+            return make_response(jsonify({'message': 'Producto eliminado'}), 200)
+        return make_response(jsonify({'message': 'Producto no encontrado'}), 404)
     except:
-        return make_response(jsonify({'message': 'Error eliminando producto'}),500)
+        return make_response(jsonify({'message': 'Error eliminando producto'}), 500)
+
+if __name__ == '__main__':
+    app.run(debug=True)
