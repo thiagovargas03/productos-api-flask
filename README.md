@@ -15,12 +15,24 @@ Permite realizar operaciones CRUD sobre la entidad **PRODUCTOS**
 
 ---
 
-## 🧰 Instalación local
+## 📖 Endpoints
 
-Sigue estos pasos para correr el proyecto en tu máquina local:
+Todos los ENDPOINTS señalados se encuentran documentados y ejemplificados con mayor detalle [en la colección de POSTMAN](https://github.com/thiagovargas03/productos-api-flask/blob/main/CRUD%20Producto%20API.postman_collection.json).
+###🔷 `POST /producto`
+Permite crear un producto y almacenarlo en la base de datos.
+###🔷 `GET /producto`
+Muestra todos los productos presentes en la base de datos.
+###🔷 `GET /producto/<id>`
+Muestra solo el producto solicitado,con el id enviado por URL, desde la base de datos.
+###🔷 `PUT /producto/<id>`
+Actualiza el producto solicitado,con el id enviado por URL, en la base de datos.
+###🔷 `DELETE /producto/<id>`
+Elimina el producto solicitado, con el id enviador por la URL, de la base de datos.
 
-### 1️⃣ Clona el repositorio
+---
 
-```bash
-git clone https://github.com/tuusuario/tu-repo.git
-cd tu-repo
+## 🧰 Probar el servicio
+
+El servicio se encuentra desplegado mediante Render, se pueden probar todos los ENDPOINTS [haciendo click aca](https://productos-api-flask.onrender.com/)
+
+
