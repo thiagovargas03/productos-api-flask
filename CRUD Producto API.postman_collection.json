@@ -22,12 +22,13 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/producto",
-					"protocol": "http",
+					"raw": "https://productos-api-flask.onrender.com/producto",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"productos-api-flask",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"producto"
 					]
@@ -49,12 +50,13 @@
 					"raw": "{\r\n  \"nombre\": \"Yerba Playadito\",\r\n  \"descripcion\": \"Yerba para mate\",\r\n  \"precio\": 999.90,\r\n  \"cantidad\": 25\r\n}\r\n"
 				},
 				"url": {
-					"raw": "http://localhost:5000/producto",
-					"protocol": "http",
+					"raw": "https://productos-api-flask.onrender.com/producto",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"productos-api-flask",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"producto"
 					]
@@ -76,15 +78,16 @@
 					"raw": "{\r\n  \"nombre\": \"Yerba Playadito\",\r\n  \"descripcion\": \"Yerba para mate\",\r\n  \"precio\": 999.90,\r\n  \"cantidad\": 25\r\n}\r\n"
 				},
 				"url": {
-					"raw": "http://localhost:5000/producto/6",
-					"protocol": "http",
+					"raw": "https://productos-api-flask.onrender.com/producto/2",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"productos-api-flask",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"producto",
-						"6"
+						"2"
 					]
 				},
 				"description": "Ruta GET para obtener un producto por id. Se requiere:\n\n- A. Enviar mediante la URL el id del producto, siguiento la estructura '/producto/'. El id debe ser valido y existir en la base de datos.\n    \n\nEn caso de no cumplir el inciso A porque el id no se encuentra en la base de datos, se indicara mediante un mensaje un error de servidor interno numero 404, remarcando que no se encontro el id.\n\nEn caso de no cumplir el inciso A porque el id proporcionado mediante la URL es invalido, se indicara mediante un mensaje el error de servidor interno numero 500, remarcando que no se pudo completar la solicitud por un error inesperado."
@@ -106,15 +109,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:5000/producto/6",
-					"protocol": "http",
+					"raw": "https://productos-api-flask.onrender.com/producto/2",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"productos-api-flask",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"producto",
-						"6"
+						"2"
 					]
 				},
 				"description": "Ruta PUT para actualizar un producto. Se requiere:\n\n- A. Enviar el id del mismo mediante la URL, el mismo debe ser valido y existir dentro de los productos almacenados en la base de datos.\n    \n- B. Enviar por el body todos los campos que se quieran actualizar, respetando los tipos de datos declarados.\n    \n\nEn caso de no cumplir con el punto A por un id erroneo, devolvera un error 404 , el cual notifica desde el servidor que no se encontro el elemento seleccionado.\n\nEn caso de no cumplir con el punto A por no enviar id, devolvera un error 500, notificando el error en actualizar ya que no es posible actualizar un producto sin enviar su id.\n\nEn caso de no cumplir con el punto B por no enviar todos los campos,devolvera un error 500, notificando el error en intentar colocar informacion en los campos que no corresponde a su tipo de dato."
@@ -131,15 +135,16 @@
 					"raw": "{\r\n  \"nombre\": \"Yerba Rosamonte\",\r\n  \"descripcion\": \"Yerba para mate con palo\",\r\n  \"precio\": 999.90,\r\n  \"cantidad\": 25\r\n}\r\n"
 				},
 				"url": {
-					"raw": "http://localhost:5000/producto/6",
-					"protocol": "http",
+					"raw": "https://productos-api-flask.onrender.com/producto/2",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"productos-api-flask",
+						"onrender",
+						"com"
 					],
-					"port": "5000",
 					"path": [
 						"producto",
-						"6"
+						"2"
 					]
 				},
 				"description": "Ruta DELETE para eliminar un producto por id. Se requiere:\n\n- A. Enviar mediante la URL el id del producto, siguiento la estructura '/producto/'. El id debe ser valido y existir en la base de datos.\n    \n\nEn caso de no cumplir el inciso A porque el id no se encuentra en la base de datos, se indicara mediante un mensaje un error de servidor interno numero 404, remarcando que no se encontro el id.\n\nEn caso de no cumplir el inciso A porque el id proporcionado mediante la URL es invalido, se indicara mediante un mensaje el error de servidor interno numero 500, remarcando que no se pudo completar la solicitud por un error inesperado."
