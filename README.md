@@ -1,24 +1,26 @@
-# 🛒 Producto API
+# 🛒 Productos
+Servicio RESTful implementado en **Python + Flask**  con almacenamiento mediante **PostgreSQL**, y desplegado en **Render**.
+Permite realizar operaciones CRUD sobre la entidad **PRODUCTOS**
 
-API RESTful para gestionar productos con Flask + MySQL.  
-Incluye operaciones CRUD y documentación Swagger.
+---
 
 ## 🚀 Tecnologías
-- Python + Flask
+
+- Python 3.13
+- Flask
+- SQLAlchemy
+- Psycopg2
 - PostgreSQL
-- Flasgger (Swagger)
-- Docker (en etapa final)
+- Render
 
-## 🧪 Endpoints
+---
 
-- `GET /api/productos`
-- `GET /api/productos/<id>`
-- `POST /api/productos`
-- `PUT /api/productos/<id>`
-- `DELETE /api/productos/<id>`
+## 🧰 Instalación local
 
-## 📦 Instalación local
+Sigue estos pasos para correr el proyecto en tu máquina local:
+
+### 1️⃣ Clona el repositorio
 
 ```bash
-pip install -r requirements.txt
-flask run
+git clone https://github.com/tuusuario/tu-repo.git
+cd tu-repo

@@ -32,6 +32,52 @@ class Producto(db.Model):
 with app.app_context():
     db.create_all()
 
+@app.route('/')
+def home():
+    html = """
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Servicio RESTful para Productos</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                text-align: center;
+                padding: 50px;
+                background-color: #f9f9f9;
+            }
+            h1 {
+                color: #333;
+            }
+            p {
+                font-size: 18px;
+                color: #555;
+            }
+            a.button {
+                display: inline-block;
+                margin-top: 20px;
+                padding: 10px 20px;
+                background-color: #007BFF;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+            a.button:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Servicio RESTful para gestion de productos</h1>
+        <a href="/apidocs" class="button">Probar con Flasgger</a>
+    </body>
+    </html>
+    """
+    return html
+
+
 @app.route('/producto', methods=['POST'])
 def create_product():
     """
